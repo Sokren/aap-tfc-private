@@ -16,9 +16,14 @@ resource "aap_host" "create_host" {
 resource "aap_job" "run_job_template" {
   job_template_id = var.job_template_id
   inventory_id    = aap_inventory.my_inventory.id
+  wait_for_completion                 = true
+  wait_for_completion_timeout_seconds = 1200
   extra_vars = <<EOT
 {
   "inventory": "${aap_inventory.my_inventory.name}"
 }
 EOT
+  depends_on = [
+    aap_host.create_host
+  ]
 }
