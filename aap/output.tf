@@ -4,5 +4,5 @@
 # }
 
  output "Status_AAP" {
-   value = aap_job.run_job_template
+   value = aap_job.run_job_template.status
  }
