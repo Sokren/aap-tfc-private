@@ -17,7 +17,7 @@ resource "aap_job" "run_job_template" {
   job_template_id = var.job_template_id
   inventory_id    = aap_inventory.my_inventory.id
   wait_for_completion                 = true
-  wait_for_completion_timeout_seconds = 1200
+  wait_for_completion_timeout_seconds = 120
   extra_vars = <<EOT
 {
   "inventory": "${aap_inventory.my_inventory.name}"
