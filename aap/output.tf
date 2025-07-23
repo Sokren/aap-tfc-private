@@ -3,6 +3,6 @@
 #   value = data.http.post_request.status_code
 # }
 
-# output "response_body" {
-#   value = data.http.post_request.response_body
-# }
+ output "Status AAP" {
+   value = aap_job.run_job_template.status
+ }
