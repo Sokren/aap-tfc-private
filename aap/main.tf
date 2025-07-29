@@ -1,8 +1,10 @@
 terraform {
   required_providers {
     aap = {
-      source  = "ansible/aap"
-      version = "1.3.0-prerelease2"
+      #source  = "ansible/aap"
+      #version = "1.3.0-prerelease2"
+      source  = "app.terraform.io/salandre-co/aaptest/provider"
+      version = "1.0.0"
     }
   }
 }
