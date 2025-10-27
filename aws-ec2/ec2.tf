@@ -96,3 +96,18 @@ resource "aws_instance" "web_server" {
     }
   }
 }
+
+action "aap_eventdispatch" "create" {
+  config {
+    limit = "tfademo"
+    template_type = "job"
+    job_template_name = "New AWS Provisioning Workflow"
+    organization_name = "Default"
+
+    event_stream_config = {
+      url = var.aap_host_url
+      username = var.aap_username
+      password = var.aap_password
+    }
+  }
+}
