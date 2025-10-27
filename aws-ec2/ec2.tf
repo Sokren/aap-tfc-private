@@ -97,7 +97,7 @@ resource "aws_instance" "web_server" {
   }
 }
 
-action "aap_eventdispatch" "create" {
+action "aap_eda_eventstream_post" "create" {
   config {
     limit = "tfademo"
     template_type = "job"
