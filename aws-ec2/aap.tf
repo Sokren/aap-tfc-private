@@ -1,4 +1,10 @@
- resource "aap_inventory" "my_inventory" {
+provider "aap" {
+  host                 = var.aap_host_url
+  username             = var.aap_username
+  password             = var.aap_password
+} 
+
+resource "aap_inventory" "my_inventory" {
    name = "TFE_Web-servers"
  }
 
