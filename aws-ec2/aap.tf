@@ -26,7 +26,7 @@ action "aap_eventdispatch" "update" {
   config {
     limit = "tfademo"
     template_type = "job"
-    job_template_name = "Update AWS Provisioning Job"
+    job_template_name = "Demo Job Template"
     organization_name = "Default"
 
     event_stream_config = {
