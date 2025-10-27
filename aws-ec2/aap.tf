@@ -2,7 +2,7 @@
    name = "TFE_Web-servers"
  }
 
-resource "aap_group" "sample_foo" {
+resource "aap_group" "tfademo" {
   inventory_id = aap_inventory.my_inventory.id
   name         = "tfademo"
   variables    = jsonencode({ "ansible_network_os" : "ubuntu" })
