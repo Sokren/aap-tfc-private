@@ -16,7 +16,7 @@ resource "aap_host" "host" {
   lifecycle {
     action_trigger {
       events  = [after_create]
-      actions = [action.aap_eventdispatch.update]
+      actions = [action.aap_eda_eventstream_post.update]
     }
   }
 }

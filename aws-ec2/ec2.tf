@@ -92,7 +92,7 @@ resource "aws_instance" "web_server" {
   lifecycle {
     action_trigger {
       events  = [after_create]
-      actions = [action.aap_eventdispatch.create]
+      actions = [action.aap_eda_eventstream_post.create]
     }
   }
 }
