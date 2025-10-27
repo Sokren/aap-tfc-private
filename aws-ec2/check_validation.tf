@@ -1,6 +1,6 @@
 check "health_check_http_AAP_8080" {
   data "http" "apache2_1_AAP" {
-    url = "http://${aws_eip_association.eip_assoc1.public_ip}:8080"
+    url = "http://${aws_instance.web_server.public_ip}:8080"
   }
 
   assert {

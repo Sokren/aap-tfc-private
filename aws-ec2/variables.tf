@@ -19,7 +19,7 @@ variable "priv_ssh_key" {
   default = ""
 }
 
-variable "num_targets" {
+variable "num_web_servers" {
   default = 2
 }
 
@@ -28,5 +28,18 @@ variable "tfc_org" {
 }
 
 variable "region" {
+  type = string
+}
+
+#AAP variables
+variable "aap_host_url" {
+  type = string
+}
+
+variable "aap_username" {
+  type = string
+}
+
+variable "aap_password" {
   type = string
 }

@@ -77,21 +77,22 @@ resource "aws_security_group_rule" "allow_egress_controller" {
   security_group_id = aws_security_group.worker.id
 }
 
-# Example resource for connecting to through boundary over SSH
-resource "aws_instance" "target" {
-  count                         = var.num_targets
+resource "aws_instance" "web_server" {
+  count                         = var.num_web_servers
   ami                           = data.hcp_packer_artifact.apache-website.external_identifier
   #ami                           = data.aws_ami.ubuntu.id
   instance_type                 = "t3.micro"
   subnet_id                     = data.terraform_remote_state.aws_infra.outputs.subnet.*.id[count.index]
   key_name                      = aws_key_pair.boundary.key_name
   vpc_security_group_ids        = [aws_security_group.worker.id]
+  associate_public_ip_address   = true
   tags = {
-    Name = "${var.tag}-target-${random_pet.test.id}-${count.index}"
+    Name = "${var.tag}-web_server-${random_pet.test.id}-${count.index}"
   }
-}
-
-resource "aws_eip_association" "eip_assoc1" {
-  instance_id   = aws_instance.target[0].id
-  allocation_id = data.terraform_remote_state.aws_infra.outputs.alloceipfirst
+  lifecycle {
+    action_trigger {
+      events  = [after_create]
+      actions = [action.aap_eventdispatch.create]
+    }
+  }
 }

@@ -1,11 +1,11 @@
 output "ec2_first_addr" {
-  value = aws_eip_association.eip_assoc1.public_ip
+  value = aws_instance.web_server.public_ip
 }
 
 output "ec2_first_addr_http" {
-  value = "http://${aws_eip_association.eip_assoc1.public_ip}"
+  value = "http://${aws_instance.web_server.public_ip}"
 }
 
 output "ec2_first_addr_aap_http" {
-  value = "http://${aws_eip_association.eip_assoc1.public_ip}:8080"
+  value = "http://${aws_instance.web_server.public_ip}:8080"
 }

@@ -1,8 +1,13 @@
 terraform {
+  required_version = "~> v1.14.0"
   required_providers {
     hcp = {
       source  = "hashicorp/hcp"
       version = "~> 0.99.0"
+    }
+    aap = {
+      source  = "ansible/aap"
+      version = "1.4.0-devpreview1"
     }
   }
 }
@@ -20,6 +25,12 @@ data "terraform_remote_state" "aws_infra" {
 
 provider "aws" {
   region  = var.region
+}
+
+provider "aap" {
+  host                 = var.aap_host_url
+  username             = var.aap_username
+  password             = var.aap_password
 }
 
 resource "random_pet" "test" {
