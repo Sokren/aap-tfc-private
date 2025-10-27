@@ -1,6 +1,13 @@
  resource "aap_inventory" "my_inventory" {
    name = "TFE_Web-servers"
  }
+
+resource "aap_group" "sample_foo" {
+  inventory_id = aap_inventory.my_inventory.id
+  name         = "tfademo"
+  variables    = jsonencode({ "ansible_network_os" : "ubuntu" })
+}
+
 # Add the new EC2 instance to the inventory
 resource "aap_host" "host" {
   for_each     = { for idx, instance in aws_instance.web_server : idx => instance }
