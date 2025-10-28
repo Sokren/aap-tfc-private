@@ -101,13 +101,13 @@ action "aap_eda_eventstream_post" "create" {
   config {
     limit = "tfademo"
     template_type = "job"
-    job_template_name = "New AWS Provisioning Workflow"
+    job_template_name = "TFA Demo Apache Update"
     organization_name = "Default"
 
     event_stream_config = {
-      url = var.aap_host_url
-      username = var.aap_username
-      password = var.aap_password
+      url = var.aap_eventstream_url
+      username = var.aap_eventstream_username
+      password = var.var.aap_eventstream_password
     }
   }
 }

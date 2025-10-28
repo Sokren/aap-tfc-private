@@ -43,3 +43,16 @@ variable "aap_username" {
 variable "aap_password" {
   type = string
 }
+
+#AAP EDA variables
+variable "aap_eventstream_url" {
+  type = string
+}
+
+variable "aap_eventstream_username" {
+  type = string
+}
+
+variable "aap_eventstream_password" {
+  type = string
+}

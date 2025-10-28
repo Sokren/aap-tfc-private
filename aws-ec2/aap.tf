@@ -42,9 +42,9 @@ action "aap_eda_eventstream_post" "update" {
     job_template_name = "Demo Job Template"
     organization_name = "Default"
     event_stream_config = {
-      url = var.aap_host_url
-      username = var.aap_username
-      password = var.aap_password
+      url = var.aap_eventstream_url
+      username = var.aap_eventstream_username
+      password = var.aap_eventstream_password
     }
   }
 }
