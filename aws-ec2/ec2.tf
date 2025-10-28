@@ -89,12 +89,12 @@ resource "aws_instance" "web_server" {
   tags = {
     Name = "${var.tag}-web_server-${random_pet.test.id}-${count.index}"
   }
-  lifecycle {
-    action_trigger {
-      events  = [after_create]
-      actions = [action.aap_eda_eventstream_post.create]
-    }
-  }
+#  lifecycle {
+#    action_trigger {
+#      events  = [after_create]
+#      actions = [action.aap_eda_eventstream_post.create]
+#    }
+#  }
 }
 
 action "aap_eda_eventstream_post" "create" {

@@ -26,12 +26,12 @@ resource "aap_host" "host" {
     public_ip    = each.value.public_ip
     target_hosts = each.value.public_ip
   })
-#  lifecycle {
-#    action_trigger {
-#      events  = [after_create]
-#      actions = [action.aap_eda_eventstream_post.update]
-#    }
-#  }
+  lifecycle {
+    action_trigger {
+      events  = [after_create]
+      actions = [action.aap_eda_eventstream_post.update]
+    }
+  }
 }
 
 # TF action to run the update AWS provisioning job (after the hosts get added to AAP inventory)
@@ -39,7 +39,7 @@ action "aap_eda_eventstream_post" "update" {
   config {
     limit = "tfademo"
     template_type = "job"
-    job_template_name = "Demo Job Template"
+    job_template_name = "TFA Demo Apache Update"
     organization_name = "Default"
     event_stream_config = {
       url = var.aap_eventstream_url
