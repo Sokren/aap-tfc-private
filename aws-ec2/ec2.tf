@@ -107,7 +107,7 @@ action "aap_eda_eventstream_post" "create" {
     event_stream_config = {
       url = var.aap_eventstream_url
       username = var.aap_eventstream_username
-      password = var.var.aap_eventstream_password
+      password = var.aap_eventstream_password
     }
   }
 }
