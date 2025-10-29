@@ -37,7 +37,7 @@ resource "aap_host" "host" {
 # TF action to run the update AWS provisioning job (after the hosts get added to AAP inventory)
 action "aap_eda_eventstream_post" "update" {
   config {
-    limit = "35.170.242.108"
+    limit = aap_host.host.name
     template_type = "job"
     job_template_name = "TFA Demo Apache Update"
     organization_name = "Default"
