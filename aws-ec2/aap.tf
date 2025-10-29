@@ -4,12 +4,13 @@ provider "aap" {
   password             = var.aap_password
 } 
 
-resource "aap_inventory" "my_inventory" {
+data "aap_inventory" "my_inventory" {
    name = "TFE_Web-servers"
+   organization_name = "Default"
  }
 
 resource "aap_group" "tfademo" {
-  inventory_id = aap_inventory.my_inventory.id
+  inventory_id = data.aap_inventory.my_inventory.id
   name         = "tfademo"
   variables    = jsonencode({ "ansible_network_os" : "ubuntu" })
 }
@@ -17,7 +18,7 @@ resource "aap_group" "tfademo" {
 # Add the new EC2 instance to the inventory
 resource "aap_host" "host" {
   for_each     = { for idx, instance in aws_instance.web_server : idx => instance }
-  inventory_id = aap_inventory.my_inventory.id
+  inventory_id = data.aap_inventory.my_inventory.id
   groups = toset([resource.aap_group.tfademo.id])
   name         = each.value.public_ip
   description  = "Host provisioned by Terraform"
