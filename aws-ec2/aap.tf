@@ -40,7 +40,6 @@ action "aap_eda_eventstream_post" "update" {
     limit = "98.93.9.213"
     template_type = "job"
     job_template_name = "TFA Demo Apache Update"
-    inventory_name    = aap_inventory.my_inventory.name
     organization_name = "Default"
     event_stream_config = {
       url = var.aap_eventstream_url
