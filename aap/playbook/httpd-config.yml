@@ -14,12 +14,12 @@
         name: git
         state: present
 
-    - name: Allow Apache (httpd) to listen on TCP port 8080 in SELinux
-      community.general.seport:
-        ports: 8080
-        proto: tcp
-        setype: http_port_t
-        state: present
+#    - name: Allow Apache (httpd) to listen on TCP port 8080 in SELinux
+#      community.general.seport:
+#        ports: 8080
+#        proto: tcp
+#        setype: http_port_t
+#        state: present
 
     - name: Update Listen port from 80 to 8080 in main httpd.conf
       lineinfile:
