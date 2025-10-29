@@ -36,8 +36,9 @@ resource "aap_host" "host" {
 
 # TF action to run the update AWS provisioning job (after the hosts get added to AAP inventory)
 action "aap_eda_eventstream_post" "update" {
+  for_each     = { for idx, instance in aws_instance.web_server : idx => instance }
   config {
-    limit = aws_instance.web_server[*].public_ip
+    limit = each.value.public_ip
     template_type = "job"
     job_template_name = "TFA Demo Apache Update"
     organization_name = "Default"
