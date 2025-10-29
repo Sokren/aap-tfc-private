@@ -23,7 +23,7 @@ resource "aap_host" "host" {
   name         = each.value.public_ip
   description  = "Host provisioned by Terraform"
   variables    = jsonencode({
-    ansible_user = "ubuntu"
+    ansible_user = "ec2-user"
     public_ip    = each.value.public_ip
     target_hosts = each.value.public_ip
   })
