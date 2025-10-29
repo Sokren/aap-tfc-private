@@ -23,17 +23,17 @@
           - event.payload.job_template_name
           - event.payload.limit
           - event.payload.organization_name
-          - event.payload.inventory
+          - event.payload.inventory_name
       actions:
         - debug:
             msg: >-
               Executing Job Template {{ event.payload.job_template_name }}
-              on inventory {{ event.payload.inventory }}
+              on inventory {{ event.payload.inventory_name }}
               with limit {{ event.payload.limit }}
         - run_job_template:
             name: "{{ event.payload.job_template_name }}"
             organization: "{{ event.payload.organization_name }}"
-            inventory: "{{ event.payload.inventory }}"
+            inventory: "{{ event.payload.inventory_name }}"
             limit: "{{ event.payload.limit }}"
         - debug:
             msg: "Executed Job Template {{ event.payload.job_template_name }}"
@@ -45,17 +45,17 @@
           - event.payload.workflow_template_name
           - event.payload.limit
           - event.payload.organization_name
-          - event.payload.inventory
+          - event.payload.inventory_name
       actions:
         - debug:
             msg: >-
               Executing Workflow Template {{ event.payload.workflow_template_name }}
-              on inventory {{ event.payload.inventory }}
+              on inventory {{ event.payload.inventory_name }}
               with limit {{ event.payload.limit }}
         - run_workflow_template:
             name: "{{ event.payload.workflow_template_name }}"
             organization: "{{ event.payload.organization_name }}"
-            inventory: "{{ event.payload.inventory }}"
+            inventory: "{{ event.payload.inventory_name }}"
             limit: "{{ event.payload.limit }}"
         - debug:
             msg: "Executed Workflow Job Template {{ event.payload.workflow_template_name }}"
