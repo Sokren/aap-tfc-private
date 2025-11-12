@@ -42,5 +42,6 @@ action "aap_job_launch" "create" {
   config {
     job_template_id     = var.aap_job_id
     wait_for_completion = true
+    wait_for_completion_timeout_seconds = 600
   }
 }
