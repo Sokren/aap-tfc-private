@@ -56,3 +56,8 @@ variable "aap_eventstream_username" {
 variable "aap_eventstream_password" {
   type = string
 }
+
+variable "aap_job_id" {
+  type = string
+  default = "9"
+}

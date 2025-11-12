@@ -38,7 +38,7 @@ resource "aap_host" "host" {
 # TF action to run the update AWS provisioning job (after the hosts get added to AAP inventory)
 action "aap_job_launch" "create" {
   config {
-    job_template_id     = 1234
+    job_template_id     = var.aap_job_id
     wait_for_completion = true
   }
 }
