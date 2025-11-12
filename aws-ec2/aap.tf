@@ -1,8 +1,8 @@
 provider "aap" {
   host                 = var.aap_host_url
-  token                = "pXcfxGy2X8wrrStrHvyvhKCRKGWigv"
-#  username             = var.aap_username
-#  password             = var.aap_password
+#  token                = "pXcfxGy2X8wrrStrHvyvhKCRKGWigv"
+  username             = var.aap_username
+  password             = var.aap_password
 } 
 
 data "aap_inventory" "my_inventory" {
