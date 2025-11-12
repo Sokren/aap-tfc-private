@@ -6,8 +6,8 @@ terraform {
       version = "~> 0.99.0"
     }
     aap = {
-      source  = "ansible/aap"
-      version = "1.4.0-devpreview1"
+      source  = "sokren/aap"
+      version = "0.0.7"
     }
   }
 }
