@@ -3,6 +3,7 @@ provider "aap" {
 #  token                = "pXcfxGy2X8wrrStrHvyvhKCRKGWigv"
   username             = var.aap_username
   password             = var.aap_password
+  insecure_skip_verify = true
 } 
 
 data "aap_inventory" "my_inventory" {
