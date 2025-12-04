@@ -29,7 +29,6 @@ resource "aap_host" "host" {
     public_ip    = each.value.public_ip
     target_hosts = each.value.public_ip
   })
-  depends_on = [time_sleep.wait_30_seconds]  
   lifecycle {
     action_trigger {
       events  = [after_create]

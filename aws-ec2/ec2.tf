@@ -97,11 +97,7 @@ resource "aws_instance" "web_server" {
 #    }
 #  }
 }
-resource "time_sleep" "wait_30_seconds" {
-  depends_on = [aws_instance.web_server]
 
-  create_duration = "30s"
-}
 action "aap_eda_eventstream_post" "create" {
   config {
     limit = "tfademo"
