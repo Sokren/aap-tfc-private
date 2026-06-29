@@ -1,13 +1,13 @@
 terraform {
-  required_version = "~> v1.14.0"
+  required_version = "~> v1.15.0"
   required_providers {
     hcp = {
       source  = "hashicorp/hcp"
       version = "~> 0.99.0"
     }
     aap = {
-      source  = "sokren/aap"
-      version = "0.0.7"
+      source  = "ansible/aap"
+      version = "1.5.0"
     }
   }
 }

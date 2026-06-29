@@ -61,3 +61,24 @@ variable "aap_job_id" {
   type = string
   default = "9"
 }
+
+# Inputs used to build the terraform_data trigger
+variable "inventory_id" {
+  type    = string
+  default = ""
+}
+
+variable "template_id" {
+  type    = string
+  default = ""
+}
+
+variable "inputs" {
+  type    = map(string)
+  default = {}
+}
+
+variable "file_inputs" {
+  type    = map(string)
+  default = {}
+}

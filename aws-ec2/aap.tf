@@ -29,20 +29,20 @@ resource "aap_host" "host" {
     public_ip    = each.value.public_ip
     target_hosts = each.value.public_ip
   })
+}
+
+# Trigger that forces a replacement (and re-runs the job action) when any input changes
+resource "terraform_data" "trigger" {
+  input = "${var.inventory_id}-${var.template_id}-${jsonencode(var.inputs)}-${jsonencode({ for k, v in var.file_inputs : k => filebase64(v) })}"
+
   lifecycle {
     action_trigger {
-      events  = [after_create]
+      events  = [before_create, before_update]
       actions = [action.aap_job_launch.create]
     }
   }
-}
 
-# TF action to run the update AWS provisioning job (after the hosts get added to AAP inventory)
-action "aap_job_launch" "create" {
-  config {
-    job_template_id     = var.aap_job_id
-    inventory_id = data.aap_inventory.my_inventory.id
-    wait_for_completion = true
-    wait_for_completion_timeout_seconds = 600
-  }
+  depends_on = [
+    aap_host.host
+  ]
 }
