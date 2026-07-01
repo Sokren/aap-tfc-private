@@ -33,7 +33,14 @@ resource "aap_host" "host" {
 
 # Trigger that forces a replacement (and re-runs the job action) when any input changes
 resource "terraform_data" "trigger" {
-  input = "${data.aap_inventory.my_inventory.id}-${var.aap_job_id}-${jsonencode(var.inputs)}-${jsonencode({ for k, v in var.file_inputs : k => filebase64(v) })}"
+  input = join("-", [
+    data.aap_inventory.my_inventory.id,
+    var.aap_job_id,
+    jsonencode(var.inputs),
+    jsonencode({ for k, v in var.file_inputs : k => filebase64(v) }),
+    jsonencode([for k, h in aap_host.host : h.variables]),
+    filesha256("${path.module}/action.tf"),
+  ])
 
   lifecycle {
     action_trigger {

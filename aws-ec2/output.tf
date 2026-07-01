@@ -13,3 +13,7 @@ output "ec2_all_addr_aap_http" {
 output "inventory_details_with_name_and_org_name" {
   value = data.aap_inventory.my_inventory
 }
+
+output "trigger_input" {
+  value = terraform_data.trigger.input
+}
