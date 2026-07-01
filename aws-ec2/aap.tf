@@ -36,10 +36,8 @@ resource "terraform_data" "trigger" {
   input = join("-", [
     data.aap_inventory.my_inventory.id,
     var.aap_job_id,
-    jsonencode(var.inputs),
-    jsonencode({ for k, v in var.file_inputs : k => filebase64(v) }),
     jsonencode([for k, h in aap_host.host : h.variables]),
-    filesha256("${path.module}/action.tf"),
+    filesha256("${path.module}/playbook/update.yml"),
   ])
 
   lifecycle {
