@@ -1,5 +1,5 @@
 terraform {
-  required_version = "~> v1.14.0"
+  required_version = "~> v1.16.0"
   required_providers {
     hcp = {
       source  = "hashicorp/hcp"
