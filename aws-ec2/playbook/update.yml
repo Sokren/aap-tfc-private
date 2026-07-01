@@ -22,4 +22,4 @@
   tasks:
     - name: Afficher le message de debug
       ansible.builtin.debug:
-        msg: "coucou update"
+        msg: "coucou update 2"
