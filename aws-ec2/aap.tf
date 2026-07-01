@@ -47,6 +47,11 @@ resource "terraform_data" "trigger" {
   }
 
   depends_on = [
-    aap_host.host
+    aap_host.host,
+    aws_security_group.worker,
+    aws_security_group_rule.allow_ingress_controller,
+    aws_security_group_rule.allow_ingress_controller_httpds,
+    aws_security_group_rule.allow_ingress_controller_httpds8080,
+    aws_security_group_rule.allow_egress_controller,
   ]
 }
