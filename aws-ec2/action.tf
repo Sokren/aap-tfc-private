@@ -7,3 +7,17 @@ action "aap_job_launch" "create" {
     wait_for_completion_timeout_seconds = 600
   }
 }
+
+data "aap_job_template" "destroy_template" {
+  name              = "destroy"
+  organization_name = "Default" # Ajustez le nom de l'organisation si nécessaire (ex: "Default")
+}
+
+action "aap_job_launch" "destroy" {
+  config {
+    job_template_id     = data.aap_job_template.destroy_template.id
+    inventory_id = data.aap_inventory.my_inventory.id
+    wait_for_completion = true
+    wait_for_completion_timeout_seconds = 600
+  }
+}

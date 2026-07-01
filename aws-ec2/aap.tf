@@ -40,6 +40,10 @@ resource "terraform_data" "trigger" {
       events  = [before_create, before_update]
       actions = [action.aap_job_launch.create]
     }
+    action_trigger {
+      events  = [before_destroy]
+      actions = [action.aap_job_launch.destroy]
+    }
   }
 
   depends_on = [
