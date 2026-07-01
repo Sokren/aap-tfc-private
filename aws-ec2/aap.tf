@@ -42,8 +42,13 @@ resource "terraform_data" "trigger" {
 
   lifecycle {
     action_trigger {
-      events  = [before_create, before_update]
+      #events  = [before_create, before_update]
+      events  = [before_create]
       actions = [action.aap_job_launch.create]
+    }
+    action_trigger {
+      events  = [before_update]
+      actions = [action.aap_job_launch.update]
     }
     action_trigger {
       events  = [before_destroy]
