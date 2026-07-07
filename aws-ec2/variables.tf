@@ -1,12 +1,16 @@
+####################################################################
+# Locals & variables d'entrée
+# Locals and input variables
+####################################################################
+
 locals {
+  # Tag commun appliqué aux ressources / Common tag applied to resources
   tags = {
     Name = "${var.tag}-${random_pet.test.id}"
   }
-
-  pub_cidrs  = cidrsubnets("10.0.0.0/24", 4, 4, 4, 4)
-  priv_cidrs = cidrsubnets("10.0.100.0/24", 4, 4, 4, 4)
 }
 
+# --- Général / General ---------------------------------------------
 variable "tag" {
   type = string
 }
@@ -19,6 +23,7 @@ variable "priv_ssh_key" {
   default = ""
 }
 
+# Nombre d'instances web à créer / Number of web instances to create
 variable "num_web_servers" {
   default = 2
 }
@@ -31,7 +36,7 @@ variable "region" {
   type = string
 }
 
-#AAP variables
+# --- AAP (Ansible Automation Platform) -----------------------------
 variable "aap_host_url" {
   type = string
 }
@@ -44,41 +49,8 @@ variable "aap_password" {
   type = string
 }
 
-#AAP EDA variables
-variable "aap_eventstream_url" {
-  type = string
-}
-
-variable "aap_eventstream_username" {
-  type = string
-}
-
-variable "aap_eventstream_password" {
-  type = string
-}
-
+# Job template id utilisé par le trigger / Job template id used by the trigger
 variable "aap_job_id" {
-  type = string
+  type    = string
   default = "9"
-}
-
-# Inputs used to build the terraform_data trigger
-variable "inventory_id" {
-  type    = string
-  default = ""
-}
-
-variable "template_id" {
-  type    = string
-  default = ""
-}
-
-variable "inputs" {
-  type    = map(string)
-  default = {}
-}
-
-variable "file_inputs" {
-  type    = map(string)
-  default = {}
 }
