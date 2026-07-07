@@ -30,6 +30,16 @@ resource "aap_host" "host" {
   })
 }
 
+# Hash agrégé de tous les fichiers du site (working directory TFE = aws-ec2,
+# le dossier website est donc à ../website/Version-RH-HC)
+locals {
+  website_dir = "${path.module}/../website/Version-RH-HC"
+  website_hash = sha256(join("", [
+    for f in sort(fileset(local.website_dir, "**")) :
+    filesha256("${local.website_dir}/${f}")
+  ]))
+}
+
 # Trigger that forces a replacement (and re-runs the job action) when any input changes
 resource "terraform_data" "trigger" {
   input = join("-", [
@@ -37,6 +47,7 @@ resource "terraform_data" "trigger" {
     var.aap_job_id,
     jsonencode([for k, h in aap_host.host : h.variables]),
     filesha256("${path.module}/playbook/update.yml"),
+    local.website_hash,
   ])
 
   lifecycle {

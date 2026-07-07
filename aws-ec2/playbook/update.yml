@@ -23,3 +23,19 @@
     - name: Afficher le message de debug
       ansible.builtin.debug:
         msg: "coucou update"
+
+    - name: Deploy new website version
+      copy:
+        src: "{{ playbook_dir }}/../../website/Version-RH-HC/"
+        dest: "/var/www/html"
+        owner: apache
+        group: apache
+        mode: '0755'
+      notify: Restart httpd
+
+    - name: Inject OS version into the website
+      ansible.builtin.replace:
+        path: /var/www/html/index.html
+        regexp: '__OS_VERSION__'
+        replace: "{{ ansible_distribution }} {{ ansible_distribution_version }}"
+      notify: Restart httpd

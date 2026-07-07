@@ -11,7 +11,11 @@ output "ec2_all_addr_aap_http" {
 }
 
 output "inventory_details_with_name_and_org_name" {
-  value = data.aap_inventory.my_inventory
+  value = {
+    id                = data.aap_inventory.my_inventory.id
+    name              = data.aap_inventory.my_inventory.name
+    organization_name = data.aap_inventory.my_inventory.organization_name
+  }
 }
 
 output "trigger_input" {
