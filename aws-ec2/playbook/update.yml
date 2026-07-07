@@ -39,3 +39,9 @@
         regexp: '__OS_VERSION__'
         replace: "{{ ansible_distribution }} {{ ansible_distribution_version }}"
       notify: Restart httpd
+
+  handlers:
+    - name: Restart httpd
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
