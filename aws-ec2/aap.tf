@@ -1,6 +1,5 @@
 provider "aap" {
   host                 = var.aap_host_url
-#  token                = "pXcfxGy2X8wrrStrHvyvhKCRKGWigv"
   username             = var.aap_username
   password             = var.aap_password
   insecure_skip_verify = true

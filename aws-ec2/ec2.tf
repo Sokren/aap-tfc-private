@@ -79,11 +79,10 @@ resource "aws_security_group_rule" "allow_egress_controller" {
 
 resource "aws_instance" "web_server" {
   count                         = var.num_web_servers
-  #ami                           = data.hcp_packer_artifact.apache-website.external_identifier
   ami                           = "ami-0fd3ac4abb734302a"
   instance_type                 = "t3.micro"
-  subnet_id                     = data.terraform_remote_state.aws_infra.outputs.subnet.*.id[0]
-#  subnet_id                     = data.terraform_remote_state.aws_infra.outputs.subnet.*.id[count.index]
+#  subnet_id                     = data.terraform_remote_state.aws_infra.outputs.subnet.*.id[0]
+  subnet_id                     = data.terraform_remote_state.aws_infra.outputs.subnet.*.id[count.index]
   key_name                      = aws_key_pair.boundary.key_name
   vpc_security_group_ids        = [aws_security_group.worker.id]
   associate_public_ip_address   = true

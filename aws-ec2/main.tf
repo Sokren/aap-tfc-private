@@ -27,12 +27,6 @@ provider "aws" {
   region  = var.region
 }
 
-#@provider "aap" {
-#  host                 = var.aap_host_url
-#  username             = var.aap_username
-#  password             = var.aap_password
-#}
-
 resource "random_pet" "test" {
   length = 1
 }
