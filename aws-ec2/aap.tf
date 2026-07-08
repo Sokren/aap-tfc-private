@@ -35,6 +35,18 @@ resource "aap_host" "host" {
     public_ip    = each.value.public_ip
     target_hosts = each.value.public_ip
   })
+
+  # Avant de retirer l'hôte de l'inventaire, on lance le job de destruction
+  # ciblé sur CET hôte (via `caller.name` dans l'action). Se déclenche aussi
+  # bien quand on réduit le nombre de VM que lors d'un destroy complet.
+  # Before the host is removed from the inventory, run the teardown job scoped
+  # to THIS host. Fires both when scaling down and on a full destroy.
+  lifecycle {
+    action_trigger {
+      events  = [before_destroy]
+      actions = [action.aap_job_launch.destroy]
+    }
+  }
 }
 
 # Hash agrégé de tous les fichiers du site.
@@ -68,10 +80,8 @@ resource "terraform_data" "trigger" {
       events  = [before_update]
       actions = [action.aap_job_launch.update]
     }
-    action_trigger {
-      events  = [before_destroy]
-      actions = [action.aap_job_launch.destroy]
-    }
+    # Le destroy est désormais géré par hôte sur aap_host.host (voir ci-dessus).
+    # Teardown is now handled per-host on aap_host.host (see above).
   }
 
   depends_on = [

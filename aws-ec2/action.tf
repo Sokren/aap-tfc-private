@@ -18,16 +18,21 @@ action "aap_job_launch" "create" {
   }
 }
 
-# --- Destruction / Teardown ----------------------------------------
+# --- Destruction par hôte / Per-host teardown ----------------------
 data "aap_job_template" "destroy_template" {
   name              = "tfc_destroy"
   organization_name = "Default" # Ajustez si nécessaire / Adjust if needed
 }
 
+# `caller` = l'instance aap_host qui déclenche l'action (before_destroy),
+# on limite donc le job à ce seul hôte via `limit`.
+# `caller` = the aap_host instance triggering the action (before_destroy),
+# so we scope the job to that single host with `limit`.
 action "aap_job_launch" "destroy" {
   config {
     job_template_id                     = data.aap_job_template.destroy_template.id
     inventory_id                        = data.aap_inventory.my_inventory.id
+    limit                               = caller.name
     wait_for_completion                 = true
     wait_for_completion_timeout_seconds = 600
   }
