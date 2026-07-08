@@ -3,16 +3,21 @@
 # AAP job templates and their launch actions
 ####################################################################
 
-# --- Provisioning initial httpd / Initial httpd provisioning -------
+# --- Provisioning httpd par hôte / Per-host httpd provisioning -----
 data "aap_job_template" "create_template" {
   name              = "tfc_httpd-config"
   organization_name = "Default" # Ajustez si nécessaire / Adjust if needed
 }
 
+# `caller` = l'instance aap_host qui déclenche l'action (after_create),
+# on limite donc le job de config au seul hôte nouvellement ajouté.
+# `caller` = the aap_host instance triggering the action (after_create),
+# so we scope the config job to the newly added host only.
 action "aap_job_launch" "create" {
   config {
     job_template_id                     = data.aap_job_template.create_template.id
     inventory_id                        = data.aap_inventory.my_inventory.id
+    limit                               = caller.name
     wait_for_completion                 = true
     wait_for_completion_timeout_seconds = 600
   }
