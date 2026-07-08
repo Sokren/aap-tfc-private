@@ -51,6 +51,22 @@ resource "aap_host" "host" {
       actions = [action.aap_job_launch.destroy]
     }
   }
+
+  # Les règles firewall doivent exister AVANT le job de config (after_create) et
+  # survivre JUSQU'À la fin du job de destruction (before_destroy). Comme
+  # depends_on s'inverse à la destruction, l'hôte (et ses actions) est traité
+  # avant que les règles ne soient supprimées → le SSH reste ouvert.
+  # Firewall rules must exist BEFORE the config job (after_create) and survive
+  # UNTIL the teardown job finishes (before_destroy). Since depends_on reverses
+  # on destroy, the host (and its actions) is handled before the rules are
+  # removed → SSH stays open.
+  depends_on = [
+    aws_security_group.worker,
+    aws_security_group_rule.allow_ingress_controller,
+    aws_security_group_rule.allow_ingress_controller_httpds,
+    aws_security_group_rule.allow_ingress_controller_httpds8080,
+    aws_security_group_rule.allow_egress_controller,
+  ]
 }
 
 # Hash agrégé de tous les fichiers du site.
@@ -84,12 +100,9 @@ resource "terraform_data" "trigger" {
     # create/destroy are now handled per-host on aap_host.host (see above).
   }
 
+  # aap_host.host dépend déjà des règles firewall (transitif).
+  # aap_host.host already depends on the firewall rules (transitive).
   depends_on = [
     aap_host.host,
-    aws_security_group.worker,
-    aws_security_group_rule.allow_ingress_controller,
-    aws_security_group_rule.allow_ingress_controller_httpds,
-    aws_security_group_rule.allow_ingress_controller_httpds8080,
-    aws_security_group_rule.allow_egress_controller,
   ]
 }
