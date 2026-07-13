@@ -17,10 +17,22 @@ data "aap_inventory" "my_inventory" {
 }
 
 # Groupe regroupant les serveurs web / Group holding the web servers
+# La config Vault est portée par les group vars (héritées par les hôtes) : elle
+# n'entre donc PAS dans terraform_data.trigger.input (qui ne hache que les host
+# vars) → le token ne fuite ni dans le trigger ni dans l'output.
+# Vault config lives in group vars (inherited by hosts): it is NOT part of
+# terraform_data.trigger.input (which only hashes host vars) → the token leaks
+# neither into the trigger nor into the outputs.
 resource "aap_group" "tfademo" {
   inventory_id = data.aap_inventory.my_inventory.id
   name         = "tfademo"
-  variables    = jsonencode({ "ansible_network_os" : "ubuntu" })
+  variables = jsonencode({
+    vault_addr        = var.vault_addr
+    vault_token       = var.vault_token
+    vault_namespace   = var.vault_namespace
+    vault_kv_mount    = var.vault_kv_mount
+    vault_skip_verify = var.vault_skip_verify
+  })
 }
 
 # Ajoute chaque instance EC2 à l'inventaire / Add each EC2 instance to the inventory

@@ -1,8 +1,12 @@
 ---
-- name: Destroy debug
+- name: Update website + rotate Vault secret
   hosts: all
   become: yes
   gather_facts: no
+
+  # Chemin Vault propre à cet hôte / Per-host Vault secret path
+  vars:
+    vault_secret_path: "aws-ec2/{{ inventory_hostname }}"
 
   pre_tasks:
     - name: Wait for system to become reachable
@@ -39,6 +43,52 @@
         regexp: '__OS_VERSION__'
         replace: "{{ ansible_distribution }} {{ ansible_distribution_version }}"
       notify: Restart httpd
+
+    # --- Vault : rotation + relecture + affichage ------------------
+    # --- Vault: rotation + read-back + display ---------------------
+    - name: "Vault | Générer une nouvelle valeur (rotation) / Generate a new value (rotation)"
+      ansible.builtin.set_fact:
+        vault_secret_value: "{{ lookup('ansible.builtin.password', '/dev/null length=24 chars=ascii_letters,digits') }}"
+      no_log: true
+
+    - name: "Vault | Mettre à jour le secret (nouvelle version KV v2) / Update the secret (new KV v2 version)"
+      ansible.builtin.uri:
+        url: "{{ vault_addr }}/v1/{{ vault_kv_mount }}/data/{{ vault_secret_path }}"
+        method: POST
+        headers:
+          X-Vault-Token: "{{ vault_token }}"
+          X-Vault-Namespace: "{{ vault_namespace }}"
+        body_format: json
+        body:
+          data:
+            value: "{{ vault_secret_value }}"
+        status_code: [200, 204]
+        validate_certs: "{{ not (vault_skip_verify | default(false) | bool) }}"
+      delegate_to: localhost
+      become: false
+      no_log: true
+
+    - name: "Vault | Relire le secret / Read the secret back"
+      ansible.builtin.uri:
+        url: "{{ vault_addr }}/v1/{{ vault_kv_mount }}/data/{{ vault_secret_path }}"
+        method: GET
+        headers:
+          X-Vault-Token: "{{ vault_token }}"
+          X-Vault-Namespace: "{{ vault_namespace }}"
+        return_content: yes
+        validate_certs: "{{ not (vault_skip_verify | default(false) | bool) }}"
+      delegate_to: localhost
+      become: false
+      register: vault_read
+      no_log: true
+
+    - name: "Site | Injecter le secret Vault dans la page / Inject the Vault secret into the page"
+      ansible.builtin.replace:
+        path: /var/www/html/index.html
+        regexp: '__VAULT_SECRET__'
+        replace: "{{ vault_read.json.data.data.value }}"
+      notify: Restart httpd
+      no_log: true
 
   handlers:
     - name: Restart httpd

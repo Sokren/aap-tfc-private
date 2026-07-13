@@ -54,3 +54,33 @@ variable "aap_job_id" {
   type    = string
   default = "9"
 }
+
+# --- Vault (API HTTP) / Vault (HTTP API) ---------------------------
+# Adresse de base Vault / Vault base URL (ex: https://vault.example:8200)
+variable "vault_addr" {
+  type = string
+}
+
+# Token d'auth Vault (header X-Vault-Token) / Vault auth token
+variable "vault_token" {
+  type      = string
+  sensitive = true
+}
+
+# Namespace Vault (Enterprise/HCP) / Vault namespace
+variable "vault_namespace" {
+  type    = string
+  default = "admin"
+}
+
+# Mount du moteur KV v2 / KV v2 engine mount
+variable "vault_kv_mount" {
+  type    = string
+  default = "secret"
+}
+
+# Ignorer la vérif TLS (Vault auto-signé) / Skip TLS verify (self-signed Vault)
+variable "vault_skip_verify" {
+  type    = bool
+  default = false
+}
