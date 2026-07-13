@@ -1,8 +1,12 @@
 ---
-- name: Destroy debug
+- name: Teardown host + delete its Vault secret
   hosts: all
   become: yes
   gather_facts: no
+
+  # Chemin Vault propre à cet hôte / Per-host Vault secret path
+  vars:
+    vault_secret_path: "tfe-vault-aap-onchange/{{ inventory_hostname }}"
 
   pre_tasks:
     - name: Wait for system to become reachable
@@ -23,3 +27,18 @@
     - name: Afficher le message de debug
       ansible.builtin.debug:
         msg: "coucou destroy"
+
+    # --- Vault : suppression du secret + historique ----------------
+    # --- Vault: delete the secret and its history ------------------
+    - name: "Vault | Supprimer le secret + historique (KV v2 metadata) / Delete secret and history"
+      ansible.builtin.uri:
+        url: "{{ vault_addr }}/v1/{{ vault_kv_mount }}/metadata/{{ vault_secret_path }}"
+        method: DELETE
+        headers:
+          X-Vault-Token: "{{ vault_token }}"
+          X-Vault-Namespace: "{{ vault_namespace }}"
+        status_code: [204, 404]          # 404 = déjà absent → idempotent / already gone → idempotent
+        validate_certs: "{{ not (vault_skip_verify | default(false) | bool) }}"
+      delegate_to: localhost
+      become: false
+      no_log: true

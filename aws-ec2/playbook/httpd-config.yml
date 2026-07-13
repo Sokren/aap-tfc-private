@@ -4,6 +4,10 @@
   become: yes
   gather_facts: no
 
+  # Chemin Vault propre à cet hôte / Per-host Vault secret path
+  vars:
+    vault_secret_path: "tfe-vault-aap-onchange/{{ inventory_hostname }}"
+
   pre_tasks:
     - name: Wait for system to become reachable
       wait_for_connection:
@@ -95,6 +99,29 @@
         name: httpd
         state: started
         enabled: yes
+
+    # --- Vault : création du secret / secret creation --------------
+    - name: "Vault | Générer un secret aléatoire / Generate a random secret"
+      ansible.builtin.set_fact:
+        vault_secret_value: "{{ lookup('ansible.builtin.password', '/dev/null length=24 chars=ascii_letters,digits') }}"
+      no_log: true
+
+    - name: "Vault | Écrire le secret (KV v2) / Write the secret (KV v2)"
+      ansible.builtin.uri:
+        url: "{{ vault_addr }}/v1/{{ vault_kv_mount }}/data/{{ vault_secret_path }}"
+        method: POST
+        headers:
+          X-Vault-Token: "{{ vault_token }}"
+          X-Vault-Namespace: "{{ vault_namespace }}"
+        body_format: json
+        body:
+          data:
+            value: "{{ vault_secret_value }}"
+        status_code: [200, 204]
+        validate_certs: "{{ not (vault_skip_verify | default(false) | bool) }}"
+      delegate_to: localhost
+      become: false
+      no_log: true
 
   handlers:
     - name: Restart httpd
