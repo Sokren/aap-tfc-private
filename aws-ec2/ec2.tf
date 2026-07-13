@@ -4,8 +4,17 @@
 ####################################################################
 
 # --- Clé SSH / SSH key pair ----------------------------------------
+# Suffixe aléatoire dédié à la clé / Dedicated random suffix for the key
+resource "random_string" "key_suffix" {
+  length  = 6
+  special = false
+  upper   = false
+}
+
+# Nom en partie aléatoire (tag-pet-suffixe) et unique.
+# Partly random, unique name (tag-pet-suffix).
 resource "aws_key_pair" "boundary" {
-  key_name   = "${var.tag}-${random_pet.test.id}"
+  key_name   = "${var.tag}-${random_pet.test.id}-${random_string.key_suffix.result}"
   public_key = var.pub_ssh_key
 
   tags = local.tags
