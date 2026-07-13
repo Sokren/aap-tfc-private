@@ -12,9 +12,11 @@ resource "random_string" "key_suffix" {
 }
 
 # Nom en partie aléatoire (tag-pet-suffixe) et unique.
+# trimspace() : AWS refuse un keyName avec espace en tête/fin (var.tag peut en
+# contenir un). / trimspace(): AWS rejects a keyName with leading/trailing space.
 # Partly random, unique name (tag-pet-suffix).
 resource "aws_key_pair" "boundary" {
-  key_name   = "${var.tag}-${random_pet.test.id}-${random_string.key_suffix.result}"
+  key_name   = trimspace("${var.tag}-${random_pet.test.id}-${random_string.key_suffix.result}")
   public_key = var.pub_ssh_key
 
   tags = local.tags
