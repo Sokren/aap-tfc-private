@@ -76,7 +76,7 @@ variable "vault_namespace" {
 # Mount du moteur KV v2 / KV v2 engine mount
 variable "vault_kv_mount" {
   type    = string
-  default = "secret"
+  default = "tfe-vault-aap-onchange"
 }
 
 # Ignorer la vérif TLS (Vault auto-signé) / Skip TLS verify (self-signed Vault)

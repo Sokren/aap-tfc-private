@@ -28,7 +28,7 @@ resource "aap_group" "tfademo" {
   name         = "tfademo"
   variables = jsonencode({
     vault_addr        = var.vault_addr
-    vault_token       = var.vault_token
+    vault_token       = trimspace(var.vault_token) # évite un \n/espace parasite → "invalid token"
     vault_namespace   = var.vault_namespace
     vault_kv_mount    = var.vault_kv_mount
     vault_skip_verify = var.vault_skip_verify

@@ -6,7 +6,7 @@
 
   # Chemin Vault propre à cet hôte / Per-host Vault secret path
   vars:
-    vault_secret_path: "tfe-vault-aap-onchange/{{ inventory_hostname }}"
+    vault_secret_path: "{{ inventory_hostname }}"  # le mount porte déjà le nom tfe-vault-aap-onchange
 
   pre_tasks:
     - name: Wait for system to become reachable
