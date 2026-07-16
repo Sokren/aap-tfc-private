@@ -121,7 +121,26 @@
         validate_certs: "{{ not (vault_skip_verify | default(false) | bool) }}"
       delegate_to: localhost
       become: false
-      no_log: true
+      register: vault_write
+      failed_when: false          # on diagnostique après (sinon no_log censure l'erreur)
+      no_log: true                # protège le token présent dans les headers
+
+    - name: "Vault | Diagnostic écriture (champs non sensibles) / Write diagnostic (safe fields)"
+      ansible.builtin.debug:
+        msg: >-
+          Vault write → HTTP {{ vault_write.status | default('n/a') }}
+          | url={{ vault_addr }}/v1/{{ vault_kv_mount }}/data/{{ vault_secret_path }}
+          | ns={{ vault_namespace }}
+          | msg={{ vault_write.msg | default('') }}
+          | errors={{ vault_write.json.errors | default([]) }}
+
+    - name: "Vault | Échec si l'écriture a raté / Fail if write failed"
+      ansible.builtin.assert:
+        that: "(vault_write.status | default(0) | int) in [200, 204]"
+        fail_msg: >-
+          Écriture Vault KO (HTTP {{ vault_write.status | default('n/a') }}) :
+          {{ vault_write.json.errors | default(vault_write.msg | default('?')) }}
+        success_msg: "Secret écrit dans Vault (HTTP {{ vault_write.status | default('n/a') }})"
 
   handlers:
     - name: Restart httpd

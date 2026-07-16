@@ -41,4 +41,23 @@
         validate_certs: "{{ not (vault_skip_verify | default(false) | bool) }}"
       delegate_to: localhost
       become: false
+      register: vault_delete
+      failed_when: false
       no_log: true
+
+    - name: "Vault | Diagnostic suppression (champs non sensibles) / Delete diagnostic (safe fields)"
+      ansible.builtin.debug:
+        msg: >-
+          Vault delete → HTTP {{ vault_delete.status | default('n/a') }}
+          | url={{ vault_addr }}/v1/{{ vault_kv_mount }}/metadata/{{ vault_secret_path }}
+          | ns={{ vault_namespace }}
+          | msg={{ vault_delete.msg | default('') }}
+          | errors={{ vault_delete.json.errors | default([]) }}
+
+    - name: "Vault | Échec si la suppression a raté / Fail if delete failed"
+      ansible.builtin.assert:
+        that: "(vault_delete.status | default(0) | int) in [204, 404]"
+        fail_msg: >-
+          Suppression Vault KO (HTTP {{ vault_delete.status | default('n/a') }}) :
+          {{ vault_delete.json.errors | default(vault_delete.msg | default('?')) }}
+        success_msg: "Secret supprimé de Vault (HTTP {{ vault_delete.status | default('n/a') }})"

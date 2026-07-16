@@ -66,7 +66,26 @@
         validate_certs: "{{ not (vault_skip_verify | default(false) | bool) }}"
       delegate_to: localhost
       become: false
+      register: vault_write
+      failed_when: false
       no_log: true
+
+    - name: "Vault | Diagnostic écriture (champs non sensibles) / Write diagnostic (safe fields)"
+      ansible.builtin.debug:
+        msg: >-
+          Vault write → HTTP {{ vault_write.status | default('n/a') }}
+          | url={{ vault_addr }}/v1/{{ vault_kv_mount }}/data/{{ vault_secret_path }}
+          | ns={{ vault_namespace }}
+          | msg={{ vault_write.msg | default('') }}
+          | errors={{ vault_write.json.errors | default([]) }}
+
+    - name: "Vault | Échec si l'écriture a raté / Fail if write failed"
+      ansible.builtin.assert:
+        that: "(vault_write.status | default(0) | int) in [200, 204]"
+        fail_msg: >-
+          Écriture Vault KO (HTTP {{ vault_write.status | default('n/a') }}) :
+          {{ vault_write.json.errors | default(vault_write.msg | default('?')) }}
+        success_msg: "Secret mis à jour dans Vault (HTTP {{ vault_write.status | default('n/a') }})"
 
     - name: "Vault | Relire le secret / Read the secret back"
       ansible.builtin.uri:
@@ -80,7 +99,25 @@
       delegate_to: localhost
       become: false
       register: vault_read
+      failed_when: false
       no_log: true
+
+    - name: "Vault | Diagnostic relecture (champs non sensibles) / Read diagnostic (safe fields)"
+      ansible.builtin.debug:
+        msg: >-
+          Vault read → HTTP {{ vault_read.status | default('n/a') }}
+          | url={{ vault_addr }}/v1/{{ vault_kv_mount }}/data/{{ vault_secret_path }}
+          | ns={{ vault_namespace }}
+          | msg={{ vault_read.msg | default('') }}
+          | errors={{ vault_read.json.errors | default([]) }}
+
+    - name: "Vault | Échec si la relecture a raté / Fail if read failed"
+      ansible.builtin.assert:
+        that: "(vault_read.status | default(0) | int) == 200"
+        fail_msg: >-
+          Relecture Vault KO (HTTP {{ vault_read.status | default('n/a') }}) :
+          {{ vault_read.json.errors | default(vault_read.msg | default('?')) }}
+        success_msg: "Secret relu depuis Vault (HTTP {{ vault_read.status | default('n/a') }})"
 
     - name: "Site | Injecter le secret Vault dans la page / Inject the Vault secret into the page"
       ansible.builtin.replace:
