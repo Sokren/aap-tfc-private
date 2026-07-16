@@ -5,7 +5,7 @@
 
 # --- Provisioning httpd par hôte / Per-host httpd provisioning -----
 data "aap_job_template" "create_template" {
-  name              = "tfc_httpd-config"
+  name              = "tfc_httpd-config2"
   organization_name = "Default" # Ajustez si nécessaire / Adjust if needed
 }
 
@@ -25,7 +25,7 @@ action "aap_job_launch" "create" {
 
 # --- Destruction par hôte / Per-host teardown ----------------------
 data "aap_job_template" "destroy_template" {
-  name              = "tfc_destroy"
+  name              = "tfc_destroy2"
   organization_name = "Default" # Ajustez si nécessaire / Adjust if needed
 }
 
@@ -45,7 +45,7 @@ action "aap_job_launch" "destroy" {
 
 # --- Mise à jour du site / Website update --------------------------
 data "aap_job_template" "update_template" {
-  name              = "tfc_update"
+  name              = "tfc_update2"
   organization_name = "Default" # Ajustez si nécessaire / Adjust if needed
 }
 
